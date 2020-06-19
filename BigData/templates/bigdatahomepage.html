@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Hello, World</title>
+<style type="text/css">
+    html{height:100%}
+    body{height:100%;margin:90px;padding:0px}
+    #allmap{height:80%;width:90%;border-style:solid ;}
+</style>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=xM0MYmGg0o1o4GF9X8ttv3RrV2zV0P4s">
+//v3.0版本的引用方式：src="http://api.map.baidu.com/api?v=3.0&ak=您的密钥"
+</script>
+</head>
+
+<body>
+<div id="allmap"></div>
+<script type="text/javascript">
+
+	var map = new BMap.Map("allmap");
+    var point = new BMap.Point(102.840593,24.888108);
+    map.centerAndZoom(point, 13);  // 编写自定义函数，创建标注
+    map.setMapStyleV2({
+    styleId: '09e1948aca8676e32eeda246714dc051'});
+    map.enableScrollWheelZoom(true);
+    map.addControl(new BMap.NavigationControl());
+    map.addControl(new BMap.ScaleControl());
+    map.addControl(new BMap.OverviewMapControl());
+    var marker = new BMap.Marker(new BMap.Point(102.856978,24.833553));
+    map.addOverlay(marker);
+    var opts = {
+    width : 250,     // 信息窗口宽度
+    height: 100,     // 信息窗口高度
+    title : "云南大学"  // 信息窗口标题
+}
+    var infoWindow = new BMap.InfoWindow("(呈贡校区)", opts);  // 创建信息窗口对象
+    marker.addEventListener("click", function(){
+		map.openInfoWindow(infoWindow,new BMap.Point(102.856978,24.833553)); //开启信息窗口
+	});
+
+
+</script>
+
+</body>
+</html>

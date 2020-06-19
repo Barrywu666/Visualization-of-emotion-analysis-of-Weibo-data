@@ -1,0 +1,479 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <link rel="stylesheet" href="../static/css/background.css">
+    <link rel="stylesheet" href="../static/css/swiper.min.css">
+    <!-- 引入 echarts.js -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="../static/js/echarts.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../static/js/vector.js"></script>
+    <script>
+
+$(function(){
+	// 初始化 传入dom id
+	var victor = new Victor("container", "output");
+	var theme = [
+			["#002c4a", "#005584"],
+		]
+	$(".color li").each(function(index, val) {
+		var color = theme[index];
+		 $(this).mouseover(function(){
+			victor(color).set();
+		 })
+	});
+});
+</script>
+</head>
+<!-- Demo styles -->
+  <style>
+    .swiper-container {
+      width: 1200px;
+      height:600px;
+      padding-top: 10px;
+      padding-bottom: 50px;
+    }
+    .swiper-slide {
+      background-position: center;
+      background-size: cover;
+      width: auto;
+      height: auto;
+
+    }
+  </style>
+<body>
+<div id="container" style="width:100%;height:850px">
+
+  <div id="output" >
+  </div>
+  </div>
+<h2 style="position:absolute;top:0%;left:0%;color:white">微博数据情感分析可视化</h2>
+ <form action="/searchresults/" method="GET">
+<div class="input-group mb-3"style="position:absolute;top:1%;left:74%;width:400px">
+     {% csrf_token %}
+  <input name="searchcontent" type="text" class="form-control" placeholder="输入搜索内容..." aria-label="Recipient's username" aria-describedby="button-addon2">
+  <div class="input-group-append">
+    <button class="btn btn-outline-primary" type="button" id="button-addon2" onclick="document.getElementById('search').click()">搜索</button>
+      <input type="submit" id="search" style="display:none">
+  </div>
+</div>
+    </form>
+<form action="/demo_search/" method="get">
+    <div style="position:absolute;left:30%;top:7%;">
+        <label for="time" style="color:white">选择日期：</label>
+        <input id="time" type="date" value=" "/>
+        <label style="color:white">地区：</label>
+        <select  id="myselect">
+            <option value="云南大学呈贡校区">云南大学呈贡校区</option>
+            <option value="昆明理工大学呈贡校区">昆明理工大学呈贡校区</option>
+            <option value="昆明医科大学">昆明医科大学</option>
+            <option value="云南师范大学呈贡校区">云南师范大学呈贡校区</option>
+            <option value="云南民族大学呈贡校区">云南民族大学呈贡校区</option>
+            <option value="云南财经大学">云南财经大学</option>
+            <option value="云南艺术学院">云南艺术学院</option>
+            <option value="西南林业大学">西南林业大学</option>
+            <option value="云南国防工业职业技术学院">云南国防工业职业技术学院</option>
+            <option value="云南交通职业技术学院呈贡校区">云南交通职业技术学院呈贡校区</option>
+            <option value="云南财经大学中华职业学院">云南财经大学中华职业学院</option>
+            <option value="云南外事外语职业学院">云南外事外语职业学院</option>
+            <option value="云南旅游职业学院">云南旅游职业学院</option>
+            <option value="昆明卫生职业学院">昆明卫生职业学院</option>
+            <option value="云南商务职业学院">云南商务职业学院</option>
+            <option value="云南经贸外事职业学院">云南经贸外事职业学院</option>
+            <option value="云南工程职业学院">云南工程职业学院</option>
+            <option value="云南城市建设职业学院">云南城市建设职业学院</option>
+            <option value="云南林业职业技术学院">云南林业职业技术学院</option>
+            <option value="云南机电职业技术学院">云南机电职业技术学院</option>
+            <option value="云南司法警官职业学院">云南司法警官职业学院</option>
+            <option value="云南国土资源职业学院">云南国土资源职业学院</option>
+            <option value="昆明冶金高等专科学校安宁校区">昆明冶金高等专科学校安宁校区</option>
+            <option value="云南工商学院">云南工商学院</option>
+            <option value="云南艺术学院文华学院">云南艺术学院文华学院</option>
+            <option value="昆明医学院海源学院">昆明医学院海源学院</option>
+            <option value="云南师范大学文理学院">云南师范大学文理学院</option>
+            <option value="云南师范大学商学院">云南师范大学商学院</option>
+            <option value="云南师范大学商学院杨林校区">云南师范大学商学院杨林校区</option>
+            <option value="云南大学滇池学院">云南大学滇池学院</option>
+            <option value="云南经济管理职业学院">云南经济管理职业学院</option>
+            <option value="昆明学院">昆明学院</option>
+            <option value="云南警官学院">云南警官学院</option>
+            <option value="云南农业大学">云南农业大学</option>
+        </select>
+    </div>
+        <button style="position:absolute;left:68%;top:6%;" class="btn btn-primary" type="button" id='sum'>提交</button>
+
+</form>
+ <!-- Swiper -->
+<div style="position:absolute;top:20%;left:10%">
+  <div class="swiper-container" >
+    <div class="swiper-wrapper" >
+      <div class="swiper-slide" >
+          <div id="main" style="width:800px;height:500px;"></div>
+      </div>
+      <div class="swiper-slide" >
+          <div id="main2" style="width:800px;height:500px;"></div>
+
+      </div>
+        <div class="swiper-slide">
+
+<form action="/demo_graph/" id="domegraph" method="POST" enctype="multipart/form-data">
+    <div style="position:absolute;left:0%;top:1%">
+    <label style="color:white">地区：</label>
+        <select  id="myselect2">
+            <option value="云南大学呈贡校区">云南大学呈贡校区</option>
+            <option value="昆明理工大学呈贡校区">昆明理工大学呈贡校区</option>
+            <option value="昆明医科大学">昆明医科大学</option>
+            <option value="云南师范大学呈贡校区">云南师范大学呈贡校区</option>
+            <option value="云南民族大学呈贡校区">云南民族大学呈贡校区</option>
+            <option value="云南财经大学">云南财经大学</option>
+            <option value="云南艺术学院">云南艺术学院</option>
+            <option value="西南林业大学">西南林业大学</option>
+            <option value="云南国防工业职业技术学院">云南国防工业职业技术学院</option>
+            <option value="云南交通职业技术学院呈贡校区">云南交通职业技术学院呈贡校区</option>
+            <option value="云南财经大学中华职业学院">云南财经大学中华职业学院</option>
+            <option value="云南外事外语职业学院">云南外事外语职业学院</option>
+            <option value="云南旅游职业学院">云南旅游职业学院</option>
+            <option value="昆明卫生职业学院">昆明卫生职业学院</option>
+            <option value="云南商务职业学院">云南商务职业学院</option>
+            <option value="云南经贸外事职业学院">云南经贸外事职业学院</option>
+            <option value="云南工程职业学院">云南工程职业学院</option>
+            <option value="云南城市建设职业学院">云南城市建设职业学院</option>
+            <option value="云南林业职业技术学院">云南林业职业技术学院</option>
+            <option value="云南机电职业技术学院">云南机电职业技术学院</option>
+            <option value="云南司法警官职业学院">云南司法警官职业学院</option>
+            <option value="云南国土资源职业学院">云南国土资源职业学院</option>
+            <option value="昆明冶金高等专科学校安宁校区">昆明冶金高等专科学校安宁校区</option>
+            <option value="云南工商学院">云南工商学院</option>
+            <option value="云南艺术学院文华学院">云南艺术学院文华学院</option>
+            <option value="昆明医学院海源学院">昆明医学院海源学院</option>
+            <option value="云南师范大学文理学院">云南师范大学文理学院</option>
+            <option value="云南师范大学商学院">云南师范大学商学院</option>
+            <option value="云南师范大学商学院杨林校区">云南师范大学商学院杨林校区</option>
+            <option value="云南大学滇池学院">云南大学滇池学院</option>
+            <option value="云南经济管理职业学院">云南经济管理职业学院</option>
+            <option value="昆明学院">昆明学院</option>
+            <option value="云南警官学院">云南警官学院</option>
+            <option value="云南农业大学">云南农业大学</option>
+        </select>
+    </div>
+    <button style="position:absolute;left:40%;top:0%;width:60px;"class="btn btn-primary" type="button" id='sum2'>提交</button>
+</form>
+          <div id="main3" style="width: 800px;height:500px;position:relative;top:5%"></div>
+      </div>
+</div>
+  </div>
+</div>
+  <!-- Swiper JS -->
+  <script src="../static/js/swiper.min.js"></script>
+
+  <!-- Initialize Swiper -->
+  <script>
+    var swiper = new Swiper('.swiper-container', {
+      effect: 'coverflow',
+      grabCursor: true,
+      centeredSlides: true,
+      slidesPerView: 'auto',
+      coverflowEffect: {
+        rotate: 50,
+        stretch: 0,
+        depth: 100,
+        modifier: 1,
+        slideShadows : true,
+      },
+      pagination: {
+        el: '.swiper-pagination',
+      },
+    });
+  </script>
+
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        var myChart2 = echarts.init(document.getElementById('main2'));
+        var myChart3 = echarts.init(document.getElementById('main3'));
+        var numdata = [];
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+        text: '情感柱状图',
+        subtext: 'X--情感      Y--人数',
+        x:'center',
+            textStyle: {
+            color: 'white'  ,                          // 主标题文字颜色
+           },
+    subtextStyle: {
+        color: 'white' ,                           // 副标题文字颜色
+    }
+            },
+            tooltip: {},
+            xAxis: {
+                data: ["喜","怒","哀","乐","平和"],
+                axisLine:{
+                        lineStyle:{
+                            color:'white',
+                        }
+                    }
+
+            },
+            yAxis: {
+            axisLine:{
+                        lineStyle:{
+                            color:'white',
+                        }
+                    }
+            },
+            series: [{
+                name: '人数',
+                type: 'bar',
+                data: numdata,
+                itemStyle: {
+            normal: {
+　　　　　　　　//这里是重点
+                color: function(params) {
+                	//注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
+                    var colorList = ['#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83', '#ca8622'];
+                    return colorList[params.dataIndex]
+                }
+            }
+        }
+
+            }]
+        };
+        var option2= {
+    title : {
+        text: '情感饼状图',
+        subtext: 'S--%',
+        x:'center',
+        textStyle: {
+            color: 'white'  ,                          // 主标题文字颜色
+           },
+       subtextStyle: {
+        color: 'white' ,                           // 副标题文字颜色
+    },
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: ['喜','怒','哀','乐','平和'],
+        textStyle: { //图例文字的样式
+                            color: 'white',
+
+                        },
+    },
+    series : [
+        {
+            name: '情感占比',
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+                {value:335, name:'喜'},
+                {value:310, name:'怒'},
+                {value:234, name:'哀'},
+                {value:135, name:'乐'},
+                {value:1548, name:'平和'}
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+
+  var option3 = {
+    title: {
+          text: '情感变化折线图',
+          subtext: '微博数据',
+          x: 'right',
+          textStyle: {
+            color: 'white'  ,                          // 主标题文字颜色
+           },
+       subtextStyle: {
+        color: 'white' ,                           // 副标题文字颜色
+    },
+        },
+        tooltip : {
+             trigger: 'axis',
+             axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                 type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+             }
+        },
+    xAxis: {
+        type: 'category',
+        data: ['date','ddd'],
+        axisLabel: {
+            rotate: 45, // 旋转角度
+            interval: 0,  //设置X轴数据间隔几个显示一个，为0表示都显示
+            },
+            axisLine:{
+                        lineStyle:{
+                            color:'white',
+                        }
+                    }
+    },
+
+    yAxis: {
+        type: 'value',
+        axisLine:{
+                        lineStyle:{
+                            color:'white',
+                        }
+                    }
+    },
+    dataZoom: [
+            {
+                show: true,
+                start: 0,
+                end: 10,
+                bottom:"0px",
+            },
+
+        ],
+    series: [{
+        data:[1,2],
+        type: 'line',
+        itemStyle:{
+            normal:{
+                color:'green',
+                lineStyle:{
+                                        color:'red'
+                                    }
+            }
+
+        }
+    }]
+};
+
+ myChart.setOption(option);
+ myChart2.setOption(option2);
+ myChart3.setOption(option3);
+
+//这里是关键点 .ready 函数好像监听器。
+        $(document).ready(function () {
+//jq的处理函数，当点击提交按钮时执行。
+            $("#sum").click(function () {
+//得到页面中id为a和b两个标签的值
+                var a = $("#time").val();
+                var b = $("#myselect").val();
+                $.get("/demo_search/", { 'a': a,'b': b}, function (ret) {
+                    if (ret) {
+                    var results = ret.split(",")
+                    for(var i=0;i<results.length;i++){
+                       numdata[i]=results[i];    //挨个取出类别并填入类别数组
+                       }
+            option = {
+            title: {
+                text: a+'\t\t'+b+'\t\t'+'情感柱状图'
+            },
+            series: [{
+                data: numdata,
+            }]
+                     }
+                option2 = {
+                title: {
+                text: a+'\t\t'+b+'\t\t'+'情感饼状图'
+            },
+                     series : [
+        {
+
+            data:[
+                {value:numdata[0], name:'喜'},
+                {value:numdata[1], name:'怒'},
+                {value:numdata[2], name:'哀'},
+                {value:numdata[3], name:'乐'},
+                {value:numdata[4], name:'平和'}
+            ],
+
+        }
+    ]
+                     }
+                     myChart.setOption(option);
+                     myChart2.setOption(option2);
+                     numdata=[];
+                     }
+                })
+            });
+        });
+
+        // 使用刚指定的配置项和数据显示图表。
+//这里是关键点 .ready 函数好像监听器。
+        $(document).ready(function () {
+//jq的处理函数，当点击提交按钮时执行。
+            $("#sum2").click(function () {
+//得到页面中id为a和b两个标签的值
+                var c = $("#myselect2").val();
+                $.get("/demo_graph/", { 'c': c}, function (res) {
+
+                    if (res) {
+                    var date=[];
+                    var emo=[];
+                    var results2 = res.split(",")
+                    for(var i=0;i<results2.length;i=i+2){
+                      date[i]=results2[i];    //挨个取出类别并填入类别数组
+                       emo[i]=results2[i+1];
+                       }
+                    var date2=[];
+                    var emo2=[];
+                    j=0
+                    for(var i=0;i<date.length;i=i+2){
+                    date2[j]=date[i];
+                    emo2[j]=emo[i];
+                    j++;
+                    }
+              option3 = {
+              title: {
+                text: c+'--'+'情感变化折线图',
+            },
+    xAxis: {
+        name: '日期',
+        type: 'category',
+        data: date2,
+    },
+yAxis: {
+        name: '情感',
+        type: 'category',
+        axisLine:{
+                        lineStyle:{
+                            color:'white',
+                        }
+                    }
+    },
+
+    series: [{
+        data:emo2,
+        type: 'line',
+        itemStyle:{
+            normal:{
+                color:'green',
+                lineStyle:{
+                                        color:'red'
+                                    }
+            }
+
+        }
+    }]
+
+};
+myChart3.setOption(option3);
+                    }
+         })
+            });
+        });
+    </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

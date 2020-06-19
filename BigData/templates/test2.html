@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <title>敏感词结果</title>
+  </head>
+  <!-- Demo styles -->
+  <style>
+  </style>
+  <body>
+
+   <h2 style="position:absolute;left:0%;top:0%;">用户：{{username}}</h2>
+<div style="position:absolute;left:0%;top:10%;width:100%">
+
+  </br>
+      <table border="1" height="500" width="1000" cellspacing="0" align="center">
+        <tr align="center" style="height:100px">
+            <td>用户id</td>
+              <td>发布时间</td>
+              <td>发布地点</td>
+              <td>内容</td>
+          </tr>
+          {% for book in books %}
+          <tr align="center">
+              <td>{{book.0}}</td>
+              <td>{{book.1}}</td>
+              <td>{{book.2}}</td>
+              <td>{{book.3}}</td>
+          </tr>
+          {% endfor %}
+      </table>
+
+
+    <div id="pages"  style="position:relative;top:30px;left:45%" >
+       <nav aria-label="...">
+  <ul class="pagination pagination-sm">
+    <li class="page-item" aria-current="page">
+      <span class="page-link">
+        {% if books.has_previous %}
+                 <a   href="?page={{ books.previous_page_number }}">上一页</a>
+                {% endif %}
+
+      </span>
+    </li>
+    <li class="page-item"><a  class="current">
+                     {{ books.number }} / {{ books.paginator.num_pages }}</a></li>
+    <li class="page-item">{% if books.has_next %}
+                   <a class="page-link"  href="?page={{ books.next_page_number }}">下一页</a>
+                {% endif %}</li>
+  </ul>
+</nav>
+    </div>
+</div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>

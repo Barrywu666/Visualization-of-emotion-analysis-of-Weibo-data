@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+     <link rel="stylesheet" href="../static/css/background.css">
+    <link rel="stylesheet" href="../static/css/swiper.min.css">
+    <!-- 引入 echarts.js -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="../static/js/echarts.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../static/js/vector.js"></script>
+    <script>
+$(function(){
+	// 初始化 传入dom id
+	var victor = new Victor("container", "output");
+	var theme = [
+			["#002c4a", "#005584"],
+		]
+	$(".color li").each(function(index, val) {
+		var color = theme[index];
+		 $(this).mouseover(function(){
+			victor(color).set();
+		 })
+	});
+});
+</script>
+    <title>敏感词结果</title>
+  </head>
+  <!-- Demo styles -->
+  <style>
+  </style>
+  <body>
+  <div id="container" style="width:100%;height:850px">
+
+  <div id="output" >
+  </div>
+  </div>
+  <h1 style="position:absolute;left:40%;top:2%;color:white">敏感词记录</h1>
+  <form action="/searchresults/" method="GET">
+<div class="input-group mb-3"style="position:absolute;top:3%;left:72%;width:400px">
+     {% csrf_token %}
+  <input name="searchcontent" type="text" class="form-control" placeholder="输入搜索内容..." aria-label="Recipient's username" aria-describedby="button-addon2">
+  <div class="input-group-append">
+    <button class="btn btn-outline-primary" type="button" id="button-addon2" onclick="document.getElementById('search').click()">搜索</button>
+      <input type="submit" id="search" style="display:none">
+  </div>
+</div>
+    </form>
+  <div style="position:absolute;left:0%;top:15%;width:100%">
+
+  </br>
+    <div class="text-center" >
+   {% for book in books %}
+<div class="list-group">
+  <a href="http://127.0.0.1:8000/test2/{{book.0}}"><button type="button" class="list-group-item list-group-item-action">
+      <p style="position:absolute;left:0%;color:red">用户ID：{{book.0}}</p>
+      <p style="position:absolute;left:40%">地区：{{book.2}}</p>
+        <p style="position:absolute;left:90%">时间：{{book.1}}</p>
+  </br></br>
+  <p style="position:absolute;left:0%">内容：{{book.3}}</p>
+  </br>
+  <p style="position:relative;top:20px;left:45%;color:red">敏感词：{{book.4}}</p>
+  </button></a>
+
+</div>
+        {% endfor %}
+    </div>
+    <div id="pages"  style="position:relative;top:30px;left:45%" >
+       <nav aria-label="...">
+  <ul class="pagination pagination-sm">
+    <li class="page-item" aria-current="page">
+      <span class="page-link">
+        {% if books.has_previous %}
+                 <a   href="?page={{ books.previous_page_number }}">上一页</a>
+                {% endif %}
+
+      </span>
+    </li>
+    <li class="page-item"><a  class="current">
+                     {{ books.number }} / {{ books.paginator.num_pages }}</a></li>
+    <li class="page-item">{% if books.has_next %}
+                   <a class="page-link"  href="?page={{ books.next_page_number }}">下一页</a>
+                {% endif %}</li>
+  </ul>
+</nav>
+    </div>
+</div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>

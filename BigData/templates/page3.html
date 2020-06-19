@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ECharts map Demo</title>
+     <link rel="stylesheet" href="../static/css/swiper.min.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src='../static/js/jquery.warpdrive.min.js'></script>
+<script src="../static/js/echarts.min.js"></script>
+<script src="../static/js/echarts.js"></script>
+<script src="../static/js/bmap.js"></script>
+<script src="../static/js/bmap.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=xM0MYmGg0o1o4GF9X8ttv3RrV2zV0P4s">
+    //v3.0版本的引用方式：src="http://api.map.baidu.com/api?v=3.0&ak=您的密钥"
+    </script>
+</head>
+  <style>
+    body {
+      background: #fff;
+      font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      color:#000;
+      margin: 0;
+      padding: 0;
+    }
+    .swiper-container {
+      width: 1200px;
+      height: 650px;
+      padding: 100px;
+    }
+    .swiper-slide {
+      background-position: center;
+      background-size: cover;
+      width: auto;
+      height: auto;
+    }
+  </style>
+<body>
+<div id='holder'style="width:100%;height:100%"></div>
+<script>
+        $( document ).ready( function() {
+            var settings = {
+                width: 1550,
+                height: 1000,
+                autoResize: false,
+                autoResizeMinWidth: null,
+                autoResizeMaxWidth: null,
+                autoResizeMinHeight: null,
+                autoResizeMaxHeight: null,
+                addMouseControls: true,
+                addTouchControls: true,
+                hideContextMenu: true,
+                starCount: 6666,
+                starBgCount: 2222,
+                starBgColor: { r:255, g:255, b:255 },
+                starBgColorRangeMin: 10,
+                starBgColorRangeMax: 40,
+                starColor: { r:255, g:255, b:255 },
+                starColorRangeMin: 10,
+                starColorRangeMax: 100,
+                starfieldBackgroundColor: { r:0, g:0, b:0 },
+                starDirection: 1,
+                starSpeed: 8,
+                starSpeedMax: 10,
+                starSpeedAnimationDuration: 2,
+                starFov: 300,
+                starFovMin: 200,
+                starFovAnimationDuration: 2,
+                starRotationPermission: true,
+                starRotationDirection: 1,
+                starRotationSpeed: 0.0,
+                starRotationSpeedMax: 1.0,
+                starRotationAnimationDuration: 2,
+                starWarpLineLength: 2.0,
+                starWarpTunnelDiameter: 100,
+                starFollowMouseSensitivity: 0.025,
+                starFollowMouseXAxis: true,
+                starFollowMouseYAxis: true
+
+            };
+
+            $( '#holder' ).warpDrive( settings );
+
+
+		} );
+
+    </script>
+<h1 style="position:absolute;top:7%;left:30%;color:white">微 博 数 据 情 感 分 析 可 视 化</h1>
+<form action="/searchresults/" method="GET">
+<div class="input-group mb-3"style="position:absolute;top:3%;left:72%;width:400px">
+     {% csrf_token %}
+  <input name="searchcontent" type="text" class="form-control" placeholder="输入搜索内容..." aria-label="Recipient's username" aria-describedby="button-addon2">
+  <div class="input-group-append">
+    <button class="btn btn-outline-primary" type="button" id="button-addon2" onclick="document.getElementById('search').click()">搜索</button>
+      <input type="submit" id="search" style="display:none">
+  </div>
+</div>
+    </form>
+<div style="position:absolute;top:0%;left:0%">
+<form action="/word/" method="POST">
+    {% csrf_token %}
+        <label for="time" style="color:white">选择日期：</label>
+        <input id="time" type="date" name="time" value=" "/>
+        <label style="color:white">地区：</label>
+        <select  id="myselect" name="myselect">
+            <option value="云南大学呈贡校区">云南大学呈贡校区</option>
+            <option value="昆明理工大学呈贡校区">昆明理工大学呈贡校区</option>
+            <option value="昆明医科大学">昆明医科大学</option>
+            <option value="云南师范大学呈贡校区">云南师范大学呈贡校区</option>
+            <option value="云南民族大学呈贡校区">云南民族大学呈贡校区</option>
+            <option value="云南财经大学">云南财经大学</option>
+            <option value="云南艺术学院">云南艺术学院</option>
+            <option value="西南林业大学">西南林业大学</option>
+            <option value="云南国防工业职业技术学院">云南国防工业职业技术学院</option>
+            <option value="云南交通职业技术学院呈贡校区">云南交通职业技术学院呈贡校区</option>
+            <option value="云南财经大学中华职业学院">云南财经大学中华职业学院</option>
+            <option value="云南外事外语职业学院">云南外事外语职业学院</option>
+            <option value="云南旅游职业学院">云南旅游职业学院</option>
+            <option value="昆明卫生职业学院">昆明卫生职业学院</option>
+            <option value="云南商务职业学院">云南商务职业学院</option>
+            <option value="云南经贸外事职业学院">云南经贸外事职业学院</option>
+            <option value="云南工程职业学院">云南工程职业学院</option>
+            <option value="云南城市建设职业学院">云南城市建设职业学院</option>
+            <option value="云南林业职业技术学院">云南林业职业技术学院</option>
+            <option value="云南机电职业技术学院">云南机电职业技术学院</option>
+            <option value="云南司法警官职业学院">云南司法警官职业学院</option>
+            <option value="云南国土资源职业学院">云南国土资源职业学院</option>
+            <option value="昆明冶金高等专科学校安宁校区">昆明冶金高等专科学校安宁校区</option>
+            <option value="云南工商学院">云南工商学院</option>
+            <option value="云南艺术学院文华学院">云南艺术学院文华学院</option>
+            <option value="昆明医学院海源学院">昆明医学院海源学院</option>
+            <option value="云南师范大学文理学院">云南师范大学文理学院</option>
+            <option value="云南师范大学商学院">云南师范大学商学院</option>
+            <option value="云南师范大学商学院杨林校区">云南师范大学商学院杨林校区</option>
+            <option value="云南大学滇池学院">云南大学滇池学院</option>
+            <option value="云南经济管理职业学院">云南经济管理职业学院</option>
+            <option value="昆明学院">昆明学院</option>
+            <option value="云南警官学院">云南警官学院</option>
+            <option value="云南农业大学">云南农业大学</option>
+        </select>
+    <p style="color:white">results:{{a}}    {{b}}</p>
+    <input class="btn btn-primary" type="submit" value="提交">
+</form>
+</div>
+<div style="position:absolute;left:0%;top:120px">
+<form action="/word/" method="GET">
+         {% csrf_token %}
+    <label for="time2" style="color:white">选择日期：</label>
+        <input id="time2" type="date" name="time2" value=" "/>
+</br>
+    <p style="color:white">results:{{c}}</p>
+        <input class="btn btn-primary" type="submit" value="提交">
+</form>
+    </div>
+<a href="http://127.0.0.1:8000/page2/"><button style="position:absolute;left:0%;top:50%"type="button" class="btn btn-primary btn-lg">数据详情</button></a>
+<form action="/demo_test/" method="GET">
+         {% csrf_token %}
+        <input class="btn btn-primary" type="submit" value="查看敏感词记录" style="position:absolute;left:0%;top:80%">
+</form>
+<div class="swiper-container" style="position:absolute;left:10%;top:20%">
+      <div class="swiper-wrapper">
+        <div  class="swiper-slide" >
+           <img src="../static/image/cloud.png" style="height:500px;width:1000px;">
+        </div>
+          <div class="swiper-slide" >
+            <div id="map_yangan" style="height:500px;width:1000px;border:3px solid black;">
+		<!-- 这里以后是地图 -->
+	        </div>
+        </div>
+      </div>
+      <!-- Add Pagination -->
+      <div class="swiper-pagination"></div>
+      <!-- Add Arrows -->
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+</div>
+    <!-- Swiper JS -->
+    <script src="../static/js/swiper.min.js"></script>
+    <!-- Initialize Swiper -->
+    <script>
+      var swiper = new Swiper('.swiper-container', {
+        observer:true,
+        observeParents:true,
+        effect: 'flip',
+        grabCursor: true,
+        pagination: {
+          el: '.swiper-pagination',
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      });
+    </script>
+</body>
+<script>
+var myData = {{myData|safe}}
+//echarts图表设置配置
+var option = {
+	//标题设置
+    	title: {},
+    	tooltip : {
+            trigger: 'item',
+        formatter: function (myData) {
+ return '<p>地点: '+myData.name+'</p><p>经纬度: '+myData.value[0]+','+myData.value[1]+'</p><p>情感: '+myData.value[2]+'</p><p>数量: '+myData.value[3]+'</p>';
+
+},
+    	},
+    	//百度地图配置
+    	bmap: {
+    	    //中心坐标，如下定义为北京
+            center: [102.840593,24.888108],
+            //地图初始显示的缩放大小
+            zoom: 12,
+            roam: true,
+            //地图上的一些特征属性设置
+        },
+    	//散点数据的配置
+    	series : [
+        {
+            name: '情感',
+            type: 'effectScatter',
+            coordinateSystem: 'bmap',
+            //数据载入，这里需要自己定义自己的数据，主要是[{name : ***, value : ***}]
+            data:myData,
+            symbolSize:function (dataItem) {
+                 return dataItem[3] / 100;
+                    },
+            //配置标签的显示
+            //配置散点的颜色
+            itemStyle: {
+                normal: {
+                    shadowBlur: 2,
+                    shadowColor: '#f4e925',
+
+                    color: function(myData){
+                    if(myData.value[2]=='喜'){
+                        return '#c23531';
+                    }
+                    if(myData.value[2]=='怒'){
+                        return '#2f4554'
+                    }
+                    if(myData.value[2]=='哀'){
+                        return '#61a0a8';
+                    }
+                    if(myData.value[2]=='乐'){
+                        return '#d48265';
+                    }
+                    if(myData.value[2]=='平和'){
+                        return '#91c7ae';
+                    }
+                }
+                }
+                }
+
+        }
+
+    	]
+};
+// 使用刚指定的配置项和数据显示图表。
+var myChart = echarts.init(document.getElementById('map_yangan'));
+myChart.setOption(option);
+var bmap = myChart.getModel().getComponent('bmap').getBMap();
+bmap.setMapStyleV2({
+    styleId: '09e1948aca8676e32eeda246714dc051'});
+    bmap.enableScrollWheelZoom(true);
+    bmap.addControl(new BMap.NavigationControl());
+    bmap.addControl(new BMap.ScaleControl());
+    bmap.addControl(new BMap.OverviewMapControl());
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</html>
